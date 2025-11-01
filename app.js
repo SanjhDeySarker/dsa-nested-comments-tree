@@ -17,3 +17,18 @@ function loadFromStorage() {
     return [];
   }
 }
+function addComment(text, author='Anonymous') {
+  if (!text || text.trim().length === 0) return null;
+  const node = {
+    id: generateId(),
+    text: text.trim(),
+    author,
+    timestamp: Date.now(),
+    edited: false,
+    editedAt: null,
+    replies: []
+  };
+  comments.push(node);
+  saveToStorage();
+  return node;
+}
