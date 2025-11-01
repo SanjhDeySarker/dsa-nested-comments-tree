@@ -60,3 +60,14 @@ function addReply(parentId, text, author='Anonymous', maxDepth=100) {
   if (ok) saveToStorage();
   return ok;
 }
+function findCommentById(targetId) {
+  function dfs(nodes) {
+    for (let node of nodes) {
+      if (node.id === targetId) return node;
+      const found = dfs(node.replies);
+      if (found) return found;
+    }
+    return null;
+  }
+  return dfs(comments);
+}
