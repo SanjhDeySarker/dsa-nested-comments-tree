@@ -95,3 +95,25 @@ function timeAgo(ts) {
   if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
   return `${Math.floor(diff/86400)}d ago`;
 }
+function escapeHtml(str) {
+  // Basic XSS prevention
+  return String(str).replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s]));
+}
+
+function renderSingle(node, depth) {
+  const indent = Math.min(depth * 20, 200); // visual guard
+  const edited = node.edited ? ' • edited' : '';
+  const repliesHtml = renderComments(node.replies, depth + 1);
+  return `
+  <div class="comment" style="margin-left:${indent}px">
+    <div class="meta"><strong>${escapeHtml(node.author)}</strong> • ${timeAgo(node.timestamp)}${edited}</div>
+    <div class="text">${escapeHtml(node.text)}</div>
+    <div style="margin-top:8px">
+      <button class="btn small" onclick="uiReply('${node.id}')">Reply</button>
+      <button class="btn small" onclick="uiEdit('${node.id}')">Edit</button>
+      <button class="btn small" onclick="uiDelete('${node.id}')">Delete</button>
+    </div>
+    <div class="replies">${repliesHtml}</div>
+  </div>
+  `;
+}
