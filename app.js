@@ -71,3 +71,7 @@ function findCommentById(targetId) {
   }
   return dfs(comments);
 }
+function clearAll() {
+  comments = [];
+  saveToStorage();
+}
