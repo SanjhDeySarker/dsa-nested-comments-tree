@@ -117,3 +117,17 @@ function renderSingle(node, depth) {
   </div>
   `;
 }
+document.getElementById('postBtn').addEventListener('click', () => {
+  const txt = document.getElementById('commentText').value;
+  const author = document.getElementById('author').value || 'Anonymous';
+  addComment(txt, author);
+  document.getElementById('commentText').value = '';
+  render();
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (confirm('Clear all comments?')) {
+    clearAll();
+    render();
+  }
+});
