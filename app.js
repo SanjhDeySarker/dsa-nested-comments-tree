@@ -75,3 +75,23 @@ function clearAll() {
   comments = [];
   saveToStorage();
 }
+const container = document.getElementById('commentsContainer');
+const countSpan = document.getElementById('count');
+
+function render() {
+  container.innerHTML = renderComments(comments, 0);
+  countSpan.textContent = `Comments: ${countComments()}`;
+}
+
+function renderComments(nodes, depth = 0) {
+  if (!nodes || nodes.length === 0) return '';
+  return nodes.map(node => renderSingle(node, depth)).join('');
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
