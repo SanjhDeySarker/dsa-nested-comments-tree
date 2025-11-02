@@ -149,3 +149,18 @@ window.uiEdit = function(targetId) {
   editComment(targetId, newText);
   render();
 };
+window.uiEdit = function(targetId) {
+  const node = findCommentById(targetId);
+  if (!node) return alert('Comment not found');
+  const newText = prompt('Edit your comment:', node.text);
+  if (newText === null) return; // cancelled
+  if (newText.trim().length === 0) return alert('Text cannot be empty');
+  editComment(targetId, newText);
+  render();
+};
+
+window.uiDelete = function(targetId) {
+  if (!confirm('Delete this comment and all its replies?')) return;
+  deleteComment(targetId);
+  render();
+};
