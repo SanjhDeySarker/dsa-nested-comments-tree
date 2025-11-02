@@ -131,3 +131,21 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     render();
   }
 });
+window.uiReply = function(parentId) {
+  const text = prompt('Enter your reply:');
+  if (!text) return;
+  const author = prompt('Your name:', 'Anonymous') || 'Anonymous';
+  const ok = addReply(parentId, text, author);
+  if (!ok) alert('Failed to add reply (parent not found).');
+  render();
+};
+
+window.uiEdit = function(targetId) {
+  const node = findCommentById(targetId);
+  if (!node) return alert('Comment not found');
+  const newText = prompt('Edit your comment:', node.text);
+  if (newText === null) return; // cancelled
+  if (newText.trim().length === 0) return alert('Text cannot be empty');
+  editComment(targetId, newText);
+  render();
+};
