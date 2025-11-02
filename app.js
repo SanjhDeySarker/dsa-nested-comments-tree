@@ -164,3 +164,4 @@ window.uiDelete = function(targetId) {
   deleteComment(targetId);
   render();
 };
+render();
