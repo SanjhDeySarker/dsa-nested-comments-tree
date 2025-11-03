@@ -13,3 +13,140 @@ body {
   color: #555;
   font-size: 0.95rem;
 }
+
+.container {
+  max-width: 850px;
+  margin: 1.5rem auto;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+/* ====== Comment Form ====== */
+.add-comment h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.add-comment input,
+.add-comment textarea {
+  width: 100%;
+  margin-bottom: 0.8rem;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.add-comment input:focus,
+.add-comment textarea:focus {
+  border-color: #2b4eff;
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn.primary {
+  background-color: #2b4eff;
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background-color: #1f37cc;
+}
+
+.btn.danger {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.btn.danger:hover {
+  background-color: #c0392b;
+}
+
+.btn.small {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.7rem;
+}
+
+/* ====== Meta Section ====== */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ====== Comment Box ====== */
+.comment {
+  border-left: 3px solid #2b4eff33;
+  padding: 10px 15px;
+  margin: 12px 0;
+  background: #fafbff;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.comment:hover {
+  background: #f0f3ff;
+}
+
+.comment .meta {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.comment .text {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.comment .actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ====== Nested Replies ====== */
+.replies {
+  margin-top: 8px;
+  border-left: 1.5px dashed #d8dbe9;
+  padding-left: 12px;
+}
+
+/* ====== Footer ====== */
+footer {
+  text-align: center;
+  color: #888;
+  font-size: 0.85rem;
+  padding: 1.2rem;
+  margin-top: 2rem;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  .container {
+    padding: 1rem;
+  }
+  .comment {
+    font-size: 0.95rem;
+  }
+}
