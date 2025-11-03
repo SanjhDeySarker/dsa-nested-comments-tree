@@ -2,3 +2,9 @@
   box-sizing: border-box;
   font-family: 'Inter', system-ui, sans-serif;
 }
+body {
+  background: #f4f6fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
