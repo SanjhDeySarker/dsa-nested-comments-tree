@@ -1,27 +1,39 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Nested Comments (DSA)</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nested Comments System | DSA Tree Project</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>💬 Nested Comments</h1>
+  <header>
+    <h1>💬 DSA Nested Comments Tree</h1>
+    <p class="subtitle">A recursion + DFS-based comment system built with vanilla JavaScript</p>
+  </header>
 
-    <div class="add-comment">
+  <main class="container">
+    <!-- Comment Input Section -->
+    <section class="add-comment">
+      <h2>Leave a Comment</h2>
       <input id="author" placeholder="Your name" />
-      <textarea id="commentText" placeholder="Write a comment..." rows="2"></textarea>
-      <button id="postBtn">Post Comment</button>
-    </div>
+      <textarea id="commentText" placeholder="Write something..." rows="3"></textarea>
+      <button id="postBtn" class="btn primary">Post Comment</button>
+    </section>
 
-    <div class="meta">
+    <!-- Comment Metadata -->
+    <section class="meta">
       <span id="count">Comments: 0</span>
-      <button id="clearBtn">Clear All</button>
-    </div>
+      <button id="clearBtn" class="btn danger small">Clear All</button>
+    </section>
 
-    <div id="commentsContainer" class="comments"></div>
-  </div>
+    <!-- Comments Container -->
+    <section id="commentsContainer" class="comments"></section>
+  </main>
+
+  <footer>
+    <p>Built for learning Data Structures & Algorithms — Recursion • Tree • DFS</p>
+  </footer>
 
   <script src="app.js"></script>
 </body>
