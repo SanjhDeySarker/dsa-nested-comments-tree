@@ -1,11 +1,15 @@
 // =======================================================
-// app.js — Nested Comments System (Recursion + DFS)
+// app.js — Nested Comments System (Tree + Recursion + DFS)
 // =======================================================
 
-// ---------- Storage & State ----------
-const STORAGE_KEY = "comments_tree_v2";
+// ---------- Global State ----------
+const STORAGE_KEY = "comments_tree_final";
 let comments = loadFromStorage();
 
+// ---------- Storage ----------
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+}
 function loadFromStorage() {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -14,64 +18,53 @@ function loadFromStorage() {
     return [];
   }
 }
-
-function saveToStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
-}
-
 function generateId() {
-  return "c_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+  return "c_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-// ---------- Core DSA Functions (Recursion + DFS) ----------
-
-// O(1)
+// ---------- Core Data Structure & DSA ----------
 function addComment(text, author = "Anonymous") {
   if (!text.trim()) return;
-  const newComment = {
+  comments.push({
     id: generateId(),
     text: text.trim(),
     author,
     timestamp: Date.now(),
+    votes: 0,
     edited: false,
     editedAt: null,
     replies: [],
     collapsed: false
-  };
-  comments.push(newComment);
+  });
   saveToStorage();
 }
 
-// O(n)
 function addReply(parentId, text, author = "Anonymous") {
-  const newReply = {
+  const reply = {
     id: generateId(),
     text: text.trim(),
     author,
     timestamp: Date.now(),
+    votes: 0,
     edited: false,
     editedAt: null,
     replies: [],
     collapsed: false
   };
-
   function dfs(nodes) {
     for (let node of nodes) {
       if (node.id === parentId) {
-        node.replies.push(newReply);
+        node.replies.push(reply);
         return true;
       }
       if (dfs(node.replies)) return true;
     }
     return false;
   }
-
-  if (dfs(comments)) {
-    saveToStorage();
-  }
+  dfs(comments);
+  saveToStorage();
 }
 
-// O(n)
 function editComment(id, newText) {
   function dfs(nodes) {
     for (let node of nodes) {
@@ -89,7 +82,6 @@ function editComment(id, newText) {
   saveToStorage();
 }
 
-// O(n)
 function deleteComment(id) {
   function dfs(nodes) {
     for (let i = 0; i < nodes.length; i++) {
@@ -105,28 +97,48 @@ function deleteComment(id) {
   saveToStorage();
 }
 
-// O(n)
+function vote(id, delta) {
+  function dfs(nodes) {
+    for (let node of nodes) {
+      if (node.id === id) {
+        node.votes += delta;
+        return true;
+      }
+      if (dfs(node.replies)) return true;
+    }
+    return false;
+  }
+  dfs(comments);
+  saveToStorage();
+}
+
+function toggleReplies(id, collapse = null) {
+  function dfs(nodes) {
+    for (let node of nodes) {
+      if (node.id === id) {
+        node.collapsed = collapse !== null ? collapse : !node.collapsed;
+        return true;
+      }
+      if (dfs(node.replies)) return true;
+    }
+    return false;
+  }
+  dfs(comments);
+  saveToStorage();
+}
+
+// ---------- Utility ----------
 function countComments() {
   function dfs(nodes) {
-    return nodes.reduce((acc, node) => acc + 1 + dfs(node.replies), 0);
+    return nodes.reduce((acc, n) => acc + 1 + dfs(n.replies), 0);
   }
   return dfs(comments);
 }
-
-// ---------- UI Utilities ----------
-const container = document.getElementById("commentsContainer");
-const countSpan = document.getElementById("count");
-
 function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, (s) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[s]);
+  return str.replace(/[&<>"']/g, (s) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[s])
+  );
 }
-
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - ts) / 1000);
   if (diff < 60) return `${diff}s ago`;
@@ -134,62 +146,8 @@ function timeAgo(ts) {
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return `${Math.floor(diff / 86400)}d ago`;
 }
-
-// ---------- Rendering (Recursive) ----------
-function render() {
-  container.innerHTML = renderComments(comments, 0);
-  countSpan.textContent = `Comments: ${countComments()}`;
-  saveToStorage();
-}
-
-function renderComments(nodes, depth = 0) {
-  return nodes
-    .map((node) => {
-      const replies = node.replies.length
-        ? `<div id="replies-${node.id}" class="replies" style="display:${node.collapsed ? "none" : "block"}">
-            ${renderComments(node.replies, depth + 1)}
-          </div>`
-        : "";
-
-      return `
-      <div class="comment" style="margin-left:${Math.min(depth * 20, 200)}px">
-        <div class="meta">
-          <strong>${escapeHtml(node.author)}</strong> • ${timeAgo(node.timestamp)}
-          ${node.edited ? " • edited" : ""}
-        </div>
-        <div class="text">${escapeHtml(node.text)}</div>
-        <div class="actions">
-          ${node.replies.length ? `<button class="btn small" onclick="toggleReplies('${node.id}')">${node.collapsed ? "Expand" : "Collapse"}</button>` : ""}
-          <button class="btn small" onclick="uiReply('${node.id}')">Reply</button>
-          <button class="btn small" onclick="uiEdit('${node.id}')">Edit</button>
-          <button class="btn small danger" onclick="uiDelete('${node.id}')">Delete</button>
-        </div>
-        ${replies}
-      </div>`;
-    })
-    .join("");
-}
-
-// ---------- Interactions ----------
-document.getElementById("postBtn").addEventListener("click", () => {
-  const author = document.getElementById("author").value || "Anonymous";
-  const text = document.getElementById("commentText").value;
-  if (!text.trim()) return alert("Please write a comment!");
-  addComment(text, author);
-  document.getElementById("commentText").value = "";
-  render();
-});
-
-document.getElementById("clearBtn").addEventListener("click", () => {
-  if (confirm("Are you sure you want to delete all comments?")) {
-    comments = [];
-    saveToStorage();
-    render();
-  }
-});
-
 function findNodeById(id, nodes = comments) {
-  for (const node of nodes) {
+  for (let node of nodes) {
     if (node.id === id) return node;
     const found = findNodeById(id, node.replies);
     if (found) return found;
@@ -197,45 +155,151 @@ function findNodeById(id, nodes = comments) {
   return null;
 }
 
-// ---------- UI Action Handlers ----------
-window.uiReply = function (parentId) {
-  const text = prompt("Enter your reply:");
-  if (!text) return;
-  const author = prompt("Your name:", "Anonymous") || "Anonymous";
-  addReply(parentId, text, author);
+// ---------- Search + Sort ----------
+let searchQuery = "";
+function filterComments(nodes) {
+  if (!searchQuery) return nodes;
+  return nodes
+    .filter((n) => n.text.toLowerCase().includes(searchQuery.toLowerCase()))
+    .map((n) => ({ ...n, replies: filterComments(n.replies) }));
+}
+
+function sortComments(order) {
+  function dfs(nodes) {
+    nodes.sort((a, b) => {
+      if (order === "newest") return b.timestamp - a.timestamp;
+      if (order === "oldest") return a.timestamp - b.timestamp;
+      if (order === "top") return b.votes - a.votes;
+      return 0;
+    });
+    nodes.forEach((n) => dfs(n.replies));
+  }
+  dfs(comments);
+}
+
+// ---------- Rendering ----------
+const container = document.getElementById("commentsContainer");
+const countSpan = document.getElementById("count");
+
+function render() {
+  const order = document.getElementById("sortSelect").value;
+  sortComments(order);
+  const filtered = filterComments(comments);
+  container.innerHTML = renderComments(filtered, 0);
+  countSpan.textContent = `Comments: ${countComments()}`;
+}
+
+function renderComments(nodes, depth = 0) {
+  return nodes
+    .map((n) => {
+      const highlight = searchQuery
+        ? n.text.replace(
+            new RegExp(searchQuery, "gi"),
+            (m) => `<mark>${m}</mark>`
+          )
+        : n.text;
+      return `
+        <div class="comment" style="margin-left:${Math.min(depth * 20, 200)}px">
+          <div class="meta"><strong>${escapeHtml(n.author)}</strong> • ${timeAgo(
+        n.timestamp
+      )}${n.edited ? " • edited" : ""}</div>
+          <div class="text">${escapeHtml(highlight)}</div>
+          <div class="votes">Votes: ${n.votes}</div>
+          <div class="actions">
+            ${
+              n.replies.length
+                ? `<button class="btn small" onclick="toggleReplies('${n.id}')">${
+                    n.collapsed ? "Expand" : "Collapse"
+                  }</button>`
+                : ""
+            }
+            <button class="btn small" onclick="vote('${n.id}', 1)">👍</button>
+            <button class="btn small" onclick="vote('${n.id}', -1)">👎</button>
+            <button class="btn small" onclick="uiReply('${n.id}')">Reply</button>
+            <button class="btn small" onclick="uiEdit('${n.id}')">Edit</button>
+            <button class="btn small danger" onclick="uiDelete('${n.id}')">Delete</button>
+          </div>
+          ${
+            n.replies.length
+              ? `<div class="replies" style="display:${
+                  n.collapsed ? "none" : "block"
+                }">${renderComments(n.replies, depth + 1)}</div>`
+              : ""
+          }
+        </div>
+      `;
+    })
+    .join("");
+}
+
+// ---------- UI Event Listeners ----------
+document.getElementById("postBtn").onclick = () => {
+  const author = document.getElementById("author").value || "Anonymous";
+  const text = document.getElementById("commentText").value;
+  if (!text.trim()) return alert("Write something!");
+  addComment(text, author);
+  document.getElementById("commentText").value = "";
   render();
 };
 
-window.uiEdit = function (id) {
+document.getElementById("clearBtn").onclick = () => {
+  if (confirm("Clear all comments?")) {
+    comments = [];
+    saveToStorage();
+    render();
+  }
+};
+
+document.getElementById("sortSelect").onchange = render;
+document.getElementById("searchBox").oninput = (e) => {
+  searchQuery = e.target.value;
+  render();
+};
+
+document.getElementById("collapseAll").onclick = () => {
+  function dfs(nodes) {
+    nodes.forEach((n) => {
+      n.collapsed = true;
+      dfs(n.replies);
+    });
+  }
+  dfs(comments);
+  render();
+};
+
+document.getElementById("expandAll").onclick = () => {
+  function dfs(nodes) {
+    nodes.forEach((n) => {
+      n.collapsed = false;
+      dfs(n.replies);
+    });
+  }
+  dfs(comments);
+  render();
+};
+
+// ---------- UI Actions ----------
+window.uiReply = (id) => {
+  const text = prompt("Your reply:");
+  if (!text) return;
+  const author = prompt("Your name:", "Anonymous") || "Anonymous";
+  addReply(id, text, author);
+  render();
+};
+window.uiEdit = (id) => {
   const node = findNodeById(id);
   if (!node) return alert("Comment not found!");
-  const newText = prompt("Edit your comment:", node.text);
+  const newText = prompt("Edit comment:", node.text);
   if (newText && newText.trim()) {
     editComment(id, newText);
     render();
   }
 };
-
-window.uiDelete = function (id) {
+window.uiDelete = (id) => {
   if (confirm("Delete this comment and its replies?")) {
     deleteComment(id);
     render();
   }
-};
-
-window.toggleReplies = function (id) {
-  function dfsToggle(nodes) {
-    for (let node of nodes) {
-      if (node.id === id) {
-        node.collapsed = !node.collapsed;
-        return true;
-      }
-      if (dfsToggle(node.replies)) return true;
-    }
-    return false;
-  }
-  dfsToggle(comments);
-  render();
 };
 
 // ---------- Initial Render ----------
