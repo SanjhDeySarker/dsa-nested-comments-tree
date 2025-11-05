@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nested Comments System | DSA Tree Project</title>
+  <title>Nested Comments System | DSA Project</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>💬 DSA Nested Comments Tree</h1>
-    <p class="subtitle">A recursion + DFS-based comment system built with vanilla JavaScript</p>
+    <p class="subtitle">Built using Recursion, DFS Traversal, and Tree Data Structure</p>
   </header>
 
   <main class="container">
-    <!-- Comment Input Section -->
+    <!-- Add Comment Section -->
     <section class="add-comment">
       <h2>Leave a Comment</h2>
       <input id="author" placeholder="Your name" />
@@ -21,18 +21,34 @@
       <button id="postBtn" class="btn primary">Post Comment</button>
     </section>
 
-    <!-- Comment Metadata -->
-    <section class="meta">
-      <span id="count">Comments: 0</span>
-      <button id="clearBtn" class="btn danger small">Clear All</button>
+    <!-- Controls -->
+    <section class="controls">
+      <div class="control-group">
+        <label for="sortSelect">Sort:</label>
+        <select id="sortSelect">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="top">Top Voted</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <input id="searchBox" placeholder="Search comments..." />
+      </div>
+      <div class="control-group">
+        <button id="collapseAll" class="btn small">Collapse All</button>
+        <button id="expandAll" class="btn small">Expand All</button>
+        <button id="clearBtn" class="btn small danger">Clear All</button>
+      </div>
     </section>
+
+    <p id="count" class="meta">Comments: 0</p>
 
     <!-- Comments Container -->
     <section id="commentsContainer" class="comments"></section>
   </main>
 
   <footer>
-    <p>Built for learning Data Structures & Algorithms — Recursion • Tree • DFS</p>
+    <p>Built to demonstrate practical DSA: Tree • DFS • Recursion • HashMap</p>
   </footer>
 
   <script src="app.js"></script>
