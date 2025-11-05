@@ -1,152 +1,67 @@
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', system-ui, sans-serif;
+/* ===== Global ===== */
+* { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+body { background: #f5f6fa; color: #222; margin: 0; padding: 0; }
+header {
+  text-align: center; background: #fff; padding: 2rem 1rem;
+  border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-body {
-  background: #f4f6fa;
-  color: #222;
-  margin: 0;
-  padding: 0;
-}
-.subtitle {
-  margin-top: 0.4rem;
-  color: #555;
-  font-size: 0.95rem;
-}
+header h1 { margin: 0; color: #2b4eff; }
+.subtitle { color: #555; margin-top: 0.5rem; }
 
 .container {
-  max-width: 850px;
-  margin: 1.5rem auto;
-  padding: 1rem 1.5rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  max-width: 900px; margin: 1.5rem auto; background: #fff; padding: 1.5rem;
+  border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
-/* ====== Comment Form ====== */
-.add-comment h2 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+/* ===== Form & Controls ===== */
+.add-comment input, .add-comment textarea {
+  width: 100%; padding: 0.8rem; margin-bottom: 0.8rem;
+  border: 1px solid #d0d7e2; border-radius: 8px; font-size: 1rem;
 }
-
-.add-comment input,
-.add-comment textarea {
-  width: 100%;
-  margin-bottom: 0.8rem;
-  padding: 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #d0d7e2;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.2s ease;
+.add-comment input:focus, .add-comment textarea:focus {
+  border-color: #2b4eff; outline: none;
 }
-
-.add-comment input:focus,
-.add-comment textarea:focus {
-  border-color: #2b4eff;
-}
-
 .btn {
-  cursor: pointer;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  cursor: pointer; border: none; padding: 0.6rem 1rem; border-radius: 6px;
+  font-weight: 500; transition: 0.2s ease;
+}
+.btn.primary { background: #2b4eff; color: #fff; }
+.btn.primary:hover { background: #1f37cc; }
+.btn.small { font-size: 0.85rem; padding: 0.4rem 0.7rem; }
+.btn.danger { background: #e74c3c; color: #fff; }
+.btn.danger:hover { background: #c0392b; }
+
+.controls {
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  align-items: center; margin: 1rem 0;
+}
+.control-group { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+#searchBox {
+  padding: 0.5rem 0.7rem; border: 1px solid #ccc; border-radius: 5px;
+  width: 180px;
 }
 
-.btn.primary {
-  background-color: #2b4eff;
-  color: #fff;
-}
-
-.btn.primary:hover {
-  background-color: #1f37cc;
-}
-
-.btn.danger {
-  background-color: #e74c3c;
-  color: #fff;
-}
-
-.btn.danger:hover {
-  background-color: #c0392b;
-}
-
-.btn.small {
-  font-size: 0.85rem;
-  padding: 0.4rem 0.7rem;
-}
-
-/* ====== Meta Section ====== */
-.meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* ====== Comment Box ====== */
+/* ===== Comments ===== */
 .comment {
   border-left: 3px solid #2b4eff33;
-  padding: 10px 15px;
-  margin: 12px 0;
-  background: #fafbff;
-  border-radius: 8px;
-  transition: background 0.2s;
+  padding: 10px 15px; margin: 12px 0;
+  background: #f9faff; border-radius: 8px;
 }
+.comment:hover { background: #f0f3ff; }
+.comment .meta { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
+.comment .text { line-height: 1.4; margin-bottom: 6px; }
+.comment .votes { font-size: 0.85rem; color: #444; }
+.comment .actions { display: flex; gap: 8px; margin-top: 6px; }
 
-.comment:hover {
-  background: #f0f3ff;
-}
-
-.comment .meta {
-  font-size: 0.85rem;
-  color: #777;
-  margin-bottom: 5px;
-}
-
-.comment .text {
-  margin-bottom: 6px;
-  line-height: 1.4;
-}
-
-.comment .actions {
-  display: flex;
-  gap: 8px;
-}
-
-/* ====== Nested Replies ====== */
 .replies {
-  margin-top: 8px;
-  border-left: 1.5px dashed #d8dbe9;
-  padding-left: 12px;
+  margin-top: 10px; border-left: 1.5px dashed #d8dbe9; padding-left: 12px;
 }
 
-/* ====== Footer ====== */
-footer {
-  text-align: center;
-  color: #888;
-  font-size: 0.85rem;
-  padding: 1.2rem;
-  margin-top: 2rem;
-}
+mark { background: #fffa99; padding: 0 2px; }
 
-footer p {
-  margin: 0;
-}
+/* ===== Footer ===== */
+footer { text-align: center; padding: 1.5rem; font-size: 0.9rem; color: #777; }
 
-/* ====== Responsive ====== */
 @media (max-width: 600px) {
-  header h1 {
-    font-size: 1.5rem;
-  }
-  .container {
-    padding: 1rem;
-  }
-  .comment {
-    font-size: 0.95rem;
-  }
+  .controls { flex-direction: column; align-items: flex-start; }
 }
